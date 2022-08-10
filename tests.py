@@ -24,7 +24,12 @@ class TestCipher(unittest.TestCase):
         self.assertEqual(caesars_cipher.cipher("abcdefg", shift=27, language="en"), "bcdefgh")
 
 class TestDecipher(unittest.TestCase):
-    ...
+    
+    def test_languages(self):
+        self.assertRaises(ValueError, caesars_cipher.decipher, "Uneef", language="de")
+    
+    def test_output(self):
+        self.assertIn("Pizza", caesars_cipher.decipher("Uneef", language="en"))
 
 
 if __name__ == "__main__":
