@@ -14,6 +14,8 @@ def cipher(message: str, /, *, shift: int, language: str) -> str:
         alphabet_lower = "abcdefghijklmnopqrstuvwxyz"
     elif language == "ru":
         alphabet_lower = "абвгдеёжзийклмнопрстуфхцчшщъыьэюя"
+    elif language == "ua":
+        alphabet_lower = "абвгґдеєжзиіїйклмнопрстуфхцчшщьюя"
     else:
         raise ValueError("\"language\" argument must be either \"en\" or \"ru\", other are not supported")
 
