@@ -19,7 +19,7 @@ def cipher(message: str, /, *, shift: int, language: str) -> str:
     elif language == "ua":
         alphabet_lower = "абвгґдеєжзиіїйклмнопрстуфхцчшщьюя"
     else:
-        raise ValueError("\"language\" argument must be either \"en\" or \"ru\", other are not supported")
+        raise ValueError("\"language\" argument must be either \"en\", \"ua\" or \"ru\", other are not supported")
 
     # Preparing arguments for use
     alphabet_upper = alphabet_lower.upper()
