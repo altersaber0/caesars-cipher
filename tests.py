@@ -1,35 +1,43 @@
-from unicodedata import name
 import unittest
-import caesars_cipher
+from caesars_cipher import CaesarsCipher
+import string
 
+class TestConstructor(unittest.TestCase):
 
-class TestCipher(unittest.TestCase):
+    def test_alphabet_argument_validation(self):
+        self.assertRaises(TypeError, CaesarsCipher, alphabet=123123)
+        self.assertRaises(ValueError, CaesarsCipher, alphabet="^&?/abcdefg123")
+    
+class TestEncryption(unittest.TestCase):
 
-    def test_message_argument_validity(self):
-        self.assertRaises(ValueError, caesars_cipher.cipher, 123, shift=1, language="en")
-        self.assertRaises(ValueError, caesars_cipher.cipher, None, shift=1, language="en")
+    def test_message_argument_validation(self):
+        cipher = CaesarsCipher(alphabet=string.ascii_lowercase)
+        self.assertRaises(ValueError, cipher.encrypt, 123, shift=1)
+        self.assertRaises(ValueError, cipher.encrypt, None, shift=1)
     
     def test_languages(self):
-        self.assertEqual(caesars_cipher.cipher("aBcDeFg", shift=5, language="en"), "fGhIjKl")
-        self.assertEqual(caesars_cipher.cipher("аБвГдЕё", shift=5, language="ru"), "еЁжЗиЙк")
-        self.assertEqual(caesars_cipher.cipher("аБвГґДе", shift=5, language="ua"), "дЕєЖзИі")
-        self.assertRaises(ValueError, caesars_cipher.cipher, "abcdefg", shift=1, language="de")
+        cipher_en = CaesarsCipher(alphabet=string.ascii_lowercase)
+        cipher_ru = CaesarsCipher(alphabet="абвгдеёжзийклмнопрстуфхцчшщъыьэюя")
+        cipher_ua = CaesarsCipher(alphabet="абвгґдеєжзиіїйклмнопрстуфхцчшщьюя")
+        self.assertEqual(cipher_en.encrypt("aBcDeFg", shift=5), "fGhIjKl")
+        self.assertEqual(cipher_ru.encrypt("аБвГдЕё", shift=5), "еЁжЗиЙк")
+        self.assertEqual(cipher_ua.encrypt("аБвГґДе", shift=5), "дЕєЖзИі")
     
-    def test_shift_argument_validity(self):
-        self.assertRaises(ValueError, caesars_cipher.cipher, "abcdefg", shift=0, language="en")
-        self.assertRaises(ValueError, caesars_cipher.cipher, "abcdefg", shift=-1, language="en")
+    def test_shift_argument_validation(self):
+        cipher = CaesarsCipher(alphabet=string.ascii_lowercase)
+        self.assertRaises(ValueError, cipher.encrypt, "abcdefg", shift=0)
+        self.assertRaises(ValueError, cipher.encrypt, "abcdefg", shift=-1)
 
     def test_shift_overflow(self):
-        self.assertEqual(caesars_cipher.cipher("Pizza", shift=5, language="en"), "Uneef")
-        self.assertEqual(caesars_cipher.cipher("abcdefg", shift=27, language="en"), "bcdefgh")
+        cipher = CaesarsCipher(alphabet=string.ascii_lowercase)
+        self.assertEqual(cipher.encrypt("Pizza", shift=5), "Uneef")
+        self.assertEqual(cipher.encrypt("abcdefg", shift=27), "bcdefgh")
 
-class TestDecipher(unittest.TestCase):
-    
-    def test_languages(self):
-        self.assertRaises(ValueError, caesars_cipher.decipher, "Uneef", language="de")
+class TestDecryption(unittest.TestCase):
     
     def test_output(self):
-        self.assertIn("Pizza", caesars_cipher.decipher("Uneef", language="en"))
+        cipher = CaesarsCipher(alphabet=string.ascii_lowercase)
+        self.assertIn("Pizza", cipher.decrypt("Uneef"))
 
 
 if __name__ == "__main__":
