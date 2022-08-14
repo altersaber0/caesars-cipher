@@ -22,6 +22,8 @@ class CaesarsCipher:
 
         if type(new_alphabet) != str:
             raise TypeError("Argument \"new_alphabet\" must be of type string")
+        if any([char in " !\"#$%&'()*+,-./:;<=>?@[\]^_`{|}~0123456789" for char in new_alphabet]):
+            raise ValueError("\"alphabet\" argument string must not contain special symbols, digits or spaces")
 
         self.alphabet_lower = new_alphabet
 
